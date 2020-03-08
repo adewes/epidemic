@@ -127,7 +127,7 @@ function evolve(){
             const infected = sickCohorts[i][j];
             totalSick += infected
             // we calculate how many people from this cohort will die
-            let deaths = Math.floor(dailyMortality[i]*infected);
+            let deaths = Math.round(dailyMortality[i]*infected);
             // we add the deceased people to the cohorts
             totalDeaths += deaths;
             if (j == sickCohorts[i].length-1){
