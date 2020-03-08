@@ -11,40 +11,28 @@
         <div id="main">
             <h1>Epidemic Simulator (v0.1)</h1>
             <p class="lead box">
-                Hi! This is a simple, cohort-based epidemic simulation. It starts
-                with a small pool of around 175 infected people, which fall
-                sick for 14 days and have a given chance of dying during
-                their sickness, with a mortality that depends on their age
-                (see below). A sick person will infect a given number of people
-                while sick, where the total number of infected people over the
-                entire course of the sickness equals the infection rate (given below).
-                We use the age distribution of the German population to evaluate
-                the effect of the infection on different age cohorts.
-                By varying the infection rate you can get a feeling for how
-                different rates affect the number of deceased people, the 
-                speed of the spreading of the infection and the maximum number
-                of infected people.
-                <br />
-                <br />
-                Feel free to suggest improvements and contribute to this project on <a href="https://github.com/adewes/epidemic">Github</a>.
-                <br />
-                <br />
-                <span class="warning">
-                    This is not a realistic simulation , it only provides a
-                    (hopefully) intuitive way
-                    to visualize the relationship between infection rate and the
-                    spreading of the infection through the population.
-                </span>
+                Hi! This is a simple, cohort-based epidemic simulation. More details <a href="#below">below</a>.
             </p>
             <div class="lead box extra-padding">
                 <div class="control">
                     <label for="rate">Infection rate</label>
                     <input value="" id="rate"/>    
                 </div>
+                <div class="control">
+                    <label for="rate">Initial sick people<sup>*</sup></label>
+                    <input value="" id="initialSick"/>    
+                </div>
+                <div class="control">
+                    <label for="rate">Sickness duration<sup>*</sup></label>
+                    <input value="" id="sicknessDuration"/>    
+                </div>
                 <div class="buttons">
                     <button id="pause">pause</button>
                     <button id="reset">reset</button>    
                 </div>
+                <p class="footnote">
+                    <sup>*</sup>changing this value will cause a restart of the simulation.
+                </p>
             </div>
             <p class="numbers">
                 <span class="number box"><span class="legend">Day</span> <span id="day"></span></span>
@@ -80,6 +68,40 @@
             <h2>Age-Related Mortality</h2>
             <div class="chart mortality box" id="mortality">
             </div>
+            <h2><a name="below">Simulation Details</a></h2>
+            <p class="lead box">            
+                The simulation starts with a given pool of infected people, which fall
+                sick for a given amount of days and have a given chance of dying during
+                their sickness, with a mortality that depends on their age
+                (see above). A sick person will infect a given number of other people
+                while sick, the total number of infections over the
+                course of the sickness is given as the infection rate
+                (you can tune this parameter). Only healthy people can be infected,
+                i.e. once someone is cured we assume that person cannot be infected again.
+                Also, we assume that the infection rate is based on the number of interactions
+                with other people from the population, hence when the number of healthy
+                vs. cured and infected people decreases in a given age cohort, the chance of
+                infecting someone from that cohort also decreases.
+                <br /><br />
+                We use the age distribution of the German population to evaluate
+                the effect of the infection on different age cohorts.
+                By varying the infection rate you can get a feeling for how
+                different rates affect the number of deceased people, the 
+                speed of the spreading of the infection and the maximum number
+                of infected people.
+                <br />
+                <br />
+                Feel free to suggest improvements and contribute to this project on <a href="https://github.com/adewes/epidemic">Github</a>.
+                <br />
+                <br />
+                <span class="warning">
+                    This is not a realistic simulation , it only provides a
+                    (hopefully) intuitive way
+                    to visualize the relationship between infection rate and the
+                    spreading of the infection through the population.
+                </span>
+
+            </p>
         </div>
     </body>
 </html>

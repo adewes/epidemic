@@ -11,6 +11,7 @@ let dates = [];
 
 let stopped = true;
 let t = 0;
+let initialSick = 200;
 let paused = false;
 
 // the mean duration of an infection
@@ -77,19 +78,23 @@ function initialize(){
 
     for(let i=0;i<healthyCohorts.length;i++){
         let sickCohort = [];
-        let allSick = 0;
         for(let j=0;j<sicknessDuration;j++){
-            if (j == 0){
-                sickCohort.push(Math.floor(Math.random()*2));
-            } else {
-                sickCohort.push(0);
-            }
-            allSick += sickCohort[sickCohort.length-1];
+            sickCohort.push(0);
         }
-        allSickCohorts.push(allSick);
+        allSickCohorts.push(0);
         sickCohorts.push(sickCohort);
         curedCohorts.push(0);
         deceasedCohorts.push(0);
+    }
+
+    let nSick = initialSick;
+
+    while (nSick > 0){
+        const incr = Math.min(Math.max(initialSick/500, 1), nSick);
+        const cohort = random(healthyCohorts.length);
+        sickCohorts[cohort][0] += incr;
+        allSickCohorts[cohort] += incr;
+        nSick -= incr;
     }
 
     updateInfectionRate();
@@ -97,8 +102,7 @@ function initialize(){
     // we convert this overall mortality to the daily mortality for sick cohorts
     dailyMortality = []
     for(let i=0;i<mortality.length;i++){
-        mortality[i]/=100.0;
-        dailyMortality.push(1.0-Math.pow(1.0-mortality[i], 1.0/sicknessDuration));
+        dailyMortality.push(1.0-Math.pow(1.0-mortality[i]/100.0, 1.0/sicknessDuration));
     }
     
 }
@@ -342,19 +346,23 @@ function updateNumbers(){
     dayElem.innerText = t;
 }
 
+function plot(){
+    updateNumbers();
+    barChart("sick", totalSick, undefined, dates);
+    barChart("healthy", totalHealthy, undefined, dates);
+    barChart("cured", totalCured, undefined, dates);
+    barChart("deceased", totalDeceased, undefined, dates);
+    barChart("deceasedCohortsAbsolute", deceasedCohorts);
+    barChart("deceasedCohorts", deceasedCohorts, allCohorts);
+    barChart("sickCohorts", allSickCohorts, allCohorts);
+    barChart("sickCohortsAbsolute", allSickCohorts);
+}
+
 function evolveAndPlot(){
     stopped = false;
     if (!paused){
         evolve();
-        updateNumbers();
-        barChart("sick", totalSick, undefined, dates);
-        barChart("healthy", totalHealthy, undefined, dates);
-        barChart("cured", totalCured, undefined, dates);
-        barChart("deceased", totalDeceased, undefined, dates);
-        barChart("deceasedCohortsAbsolute", deceasedCohorts);
-        barChart("deceasedCohorts", deceasedCohorts, allCohorts);
-        barChart("sickCohorts", allSickCohorts, allCohorts);
-        barChart("sickCohortsAbsolute", allSickCohorts);
+        plot();
         t++;
     }
     if (t < 200)
@@ -365,6 +373,7 @@ function evolveAndPlot(){
 
 function onLoad(){
     initialize();
+    plot();
     if (stopped)
         evolveAndPlot();
     const pauseButton = document.getElementById("pause");
@@ -374,13 +383,21 @@ function onLoad(){
     const rateInput = document.getElementById("rate");
     rateInput.value = infectionRate;
     rateInput.addEventListener("input", onRateChange);
+
+    const initialSickInput = document.getElementById("initialSick");
+    initialSickInput.value = initialSick;
+    initialSickInput.addEventListener("input", onInitialSickChange);
+
+    const sicknessDurtionInput = document.getElementById("sicknessDuration");
+    sicknessDurtionInput.value = sicknessDuration;
+    sicknessDurtionInput.addEventListener("input", onSicknessDurationChange);
+
     barChart("mortality", mortality);
 }
 
 function reset(){
     initialize();
-    if (paused)
-        paused = false;
+    plot();
     if (stopped)
         evolveAndPlot();
 }
@@ -404,6 +421,23 @@ function onRateChange(e){
         infectionRate = newInfectionRate;
         updateInfectionRate();
     }
+}
+
+function onSicknessDurationChange(e){
+    const newDuration = parseInt(e.target.value);
+    if (newDuration === newDuration) {
+        sicknessDuration = newDuration;
+        reset();
+    }
+}
+
+function onInitialSickChange(e){
+    const newInitialSick = parseInt(e.target.value);
+    if (newInitialSick === newInitialSick) {
+        initialSick = newInitialSick;
+        reset();
+    }
+
 }
 
 window.addEventListener("load", onLoad, false);

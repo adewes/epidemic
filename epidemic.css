@@ -29,6 +29,13 @@ body {
     padding: 0;
 }
 
+p.footnote {
+    border-top: 1px solid #eee;
+    margin: 0;
+    color: #999;
+    font-size: 0.8rem;
+}
+
 .box {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
@@ -44,14 +51,15 @@ body {
 }
 
 .control {
+    display: inline-block;
     position: relative;
-    display: inline;
+    margin-bottom: 32px;
 }
 
 .control label {
     position: absolute;
     left: 0;
-    top: -30px;
+    top: -20px;
     font-size: 0.8rem;
 }
 
@@ -138,9 +146,9 @@ p.numbers span {
 }
 
 .deceased span.bar {
-    background: #000;
+    background: #a00;
 }
 
 .cured span.bar {
-    background: #af0;
+    background: #5ea;
 }
