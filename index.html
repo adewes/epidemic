@@ -1,0 +1,85 @@
+<html lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="epidemic.css" />
+    <title>Epidemic Simulator</title>
+    <head>
+        <script src="epidemic.js" type="application/javascript"></script>
+    </head>
+    <body>
+        <div id="main">
+            <h1>Epidemic Simulator (v0.1)</h1>
+            <p class="lead box">
+                Hi! This is a simple, cohort-based epidemic simulation. It starts
+                with a small pool of around 175 infected people, which fall
+                sick for 14 days and have a given chance of dying during
+                their sickness, with a mortality that depends on their age
+                (see below). A sick person will infect a given number of people
+                while sick, where the total number of infected people over the
+                entire course of the sickness equals the infection rate (given below).
+                We use the age distribution of the German population to evaluate
+                the effect of the infection on different age cohorts.
+                By varying the infection rate you can get a feeling for how
+                different rates affect the number of deceased people, the 
+                speed of the spreading of the infection and the maximum number
+                of infected people.
+                <br />
+                <br />
+                You can find the source code on <a href="https://github.com/adewes/epidemic">Github</a>.
+                <br />
+                <br />
+                <span class="warning">
+                    This is not a realistic simulation , it only provides a
+                    (hopefully) intuitive way
+                    to visualize the relationship between infection rate and the
+                    spreading of the infection through the population.
+                </span>
+            </p>
+            <div class="lead box extra-padding">
+                <div class="control">
+                    <label for="rate">Infection rate</label>
+                    <input value="" id="rate"/>    
+                </div>
+                <div class="buttons">
+                    <button id="pause">pause</button>
+                    <button id="reset">reset</button>    
+                </div>
+            </div>
+            <p class="numbers">
+                <span class="number box"><span class="legend">Day</span> <span id="day"></span></span>
+                <span class="number box"><span class="legend">Total sick</span> <span id="totalSick"></span></span>
+                <span class="number box"><span class="legend">Total healthy</span> <span id="totalHealthy"></span></span>
+                <span class="number box"><span class="legend">Total cured</span> <span id="totalCured"></span></span>
+                <span class="number box"><span class="legend">Total deceased</span> <span id="totalDeceased"></span></span>
+            </p>
+            <h2>Healthy People</h2>
+            <div class="chart healthy box" id="healthy">
+            </div>
+            <h2>Sick People</h2>
+            <div class="chart sick box" id="sick">
+            </div>
+            <h2>Cured People</h2>
+            <div class="chart cured box" id="cured">
+            </div>
+            <h2>Deceased People</h2>
+            <div class="chart deceased box" id="deceased">                
+            </div>
+            <h2>Age Cohorts: Sick People</h2>
+            <div class="chart sick box" id="sickCohortsAbsolute">
+            </div>
+            <h2>Age Cohorts: Deceased People</h2>
+            <div class="chart deceased box" id="deceasedCohortsAbsolute">
+            </div>
+            <h2>Age Cohorts: Sick People People (with reference)</h2>
+            <div class="chart sick box" id="sickCohorts">
+            </div>
+            <h2>Age Cohorts: Deceased People (with reference)</h2>
+            <div class="chart deceased box" id="deceasedCohorts">
+            </div>
+            <h2>Age-Related Mortality</h2>
+            <div class="chart mortality box" id="mortality">
+            </div>
+        </div>
+    </body>
+</html>
