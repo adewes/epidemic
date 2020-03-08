@@ -216,7 +216,7 @@ function barChart(id, bars, referenceBars, ticks){
     const bottomMargin = 40;
     const leftMargin = 60;
     const plotHeight = 200;
-    const nHorizonalTicks = Math.min(5, bars.length/10);
+    const nHorizonalTicks = Math.min(plot.clientWidth/100, bars.length/10);
     const container = document.createElement("div");
     container.style.height = (plotHeight+bottomMargin)+"px";
     container.style.width = "100%";
