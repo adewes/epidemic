@@ -73,6 +73,7 @@ button, input {
 .buttons {
     display: inline-block;
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 button#pause.paused {
