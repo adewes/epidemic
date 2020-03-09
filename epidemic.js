@@ -227,7 +227,7 @@ function barChart(id, bars, referenceBars, ticks){
         plot.appendChild(container);
 
     const plotWidth = container.clientWidth-leftMargin-bars.length*barMargin;
-    const barWidth = Math.min(20, plotWidth/bars.length));
+    const barWidth = Math.min(20, plotWidth/bars.length);
     const innerWidth = (barWidth+barMargin)*bars.length;
     let max = 0;
     for(let i=0;i<bars.length;i++){
