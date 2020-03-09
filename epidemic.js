@@ -238,11 +238,11 @@ function barChart(id, bars, referenceBars, ticks){
     }
     let lastXTick;
     for(let i=0;i<bars.length;i++){
-        let width = barWidth+"px";
+        let width = barWidth+(x-Math.floor(x) > 0.5 ? 1 : 0)+"px";
         let x = leftMargin+i*(barWidth+barMargin);
         if (referenceBars !== undefined){
             const refElement = document.createElement("span");
-            refElement.style.width = width+(x-Math.floor(x) > 0.5 ? 1 : 0);
+            refElement.style.width = width;
             refElement.style.height = Math.floor(referenceBars[i]/max*plotHeight)+"px";
             refElement.style.position = "absolute";
             refElement.style.left = Math.floor(x)+"px";
@@ -270,7 +270,7 @@ function barChart(id, bars, referenceBars, ticks){
 
         const element = document.createElement("span");
         element.style.marginLeft = -(barWidth+barMargin)+"px";
-        element.style.width = width+(x-Math.floor(x) > 0.5 ? 1 : 0);
+        element.style.width = width;
         element.style.height = Math.floor(bars[i]/max*plotHeight)+"px";
         element.style.position = "absolute";
         element.style.left = x+"px";
