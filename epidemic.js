@@ -252,7 +252,7 @@ function barChart(id, bars, referenceBars, ticks){
             refElement.style.margin = barMargin+"px";
             container.appendChild(refElement);
         }
-        if ((i) % (Math.floor(bars.length/nHorizonalTicks)) == 0){
+        if (i % (Math.floor(bars.length/(nHorizonalTicks+1))) == 0){
             // we add a legend
             const legendElement = document.createElement("span");
             legendElement.style.position = "absolute";
