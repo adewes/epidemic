@@ -311,7 +311,7 @@ function formatNumber(x) {
     if (o >= 6) {
         return (Math.round(x/Math.pow(10, 6)*10)/10.0)+"M";
     } else if (o >= 3) {
-        return (Math.round(x/Math.pow(10, 3)*10)/10.0)+"T";
+        return (Math.round(x/Math.pow(10, 3)*10)/10.0)+"k";
     }
     return x;
 }
