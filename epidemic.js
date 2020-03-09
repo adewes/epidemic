@@ -236,6 +236,7 @@ function barChart(id, bars, referenceBars, ticks){
         if (bars[i] > max)
             max = bars[i];
     }
+    let lastXTick;
     for(let i=0;i<bars.length;i++){
         let width = barWidth+"px";
 
@@ -257,9 +258,14 @@ function barChart(id, bars, referenceBars, ticks){
             legendElement.style.position = "absolute";
             legendElement.style.display = "block";
             legendElement.innerText = ticks !== undefined ? ticks[i] : i;
+            const left = (-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin));
             container.appendChild(legendElement);
-            legendElement.style.left = (-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin))+"px";
+            legendElement.style.left = left+"px";
             legendElement.style.bottom = (bottomMargin-legendElement.clientHeight)+"px";
+            // if there's not enough space for a tick we remove it again...
+            if (lastXTick !== undefined && left <= lastXTick)
+                container.removeChild(legendElement);
+            lastXTick = left+legendElement.clientWidth;
         }
 
         const element = document.createElement("span");
