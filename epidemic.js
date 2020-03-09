@@ -227,7 +227,7 @@ function barChart(id, bars, referenceBars, ticks){
         plot.appendChild(container);
 
     const plotWidth = container.clientWidth-leftMargin-bars.length*barMargin;
-    const barWidth = Math.max(1, Math.floor(Math.min(20, plotWidth/bars.length)));
+    const barWidth = Math.min(20, plotWidth/bars.length));
     const innerWidth = (barWidth+barMargin)*bars.length;
     let max = 0;
     for(let i=0;i<bars.length;i++){
@@ -245,7 +245,7 @@ function barChart(id, bars, referenceBars, ticks){
             refElement.style.width = width;
             refElement.style.height = Math.floor(referenceBars[i]/max*plotHeight)+"px";
             refElement.style.position = "absolute";
-            refElement.style.left = (leftMargin+i*(barWidth+barMargin))+"px";
+            refElement.style.left = Math.floor(leftMargin+i*(barWidth+barMargin))+"px";
             refElement.style.bottom = bottomMargin+"px";
             refElement.style.display = "block";
             refElement.className = "refbar";
@@ -258,7 +258,7 @@ function barChart(id, bars, referenceBars, ticks){
             legendElement.style.position = "absolute";
             legendElement.style.display = "block";
             legendElement.innerText = ticks !== undefined ? ticks[i] : i;
-            const left = (-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin));
+            const left = Math.floor(-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin));
             container.appendChild(legendElement);
             legendElement.style.left = left+"px";
             legendElement.style.bottom = (bottomMargin-legendElement.clientHeight)+"px";
@@ -273,7 +273,7 @@ function barChart(id, bars, referenceBars, ticks){
         element.style.width = width;
         element.style.height = Math.floor(bars[i]/max*plotHeight)+"px";
         element.style.position = "absolute";
-        element.style.left = (leftMargin+i*(barWidth+barMargin))+"px";
+        element.style.left = Math.floor(leftMargin+i*(barWidth+barMargin))+"px";
         element.style.bottom = bottomMargin+"px";
         element.style.display = "block";
         element.style.zIndex = 2;
