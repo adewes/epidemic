@@ -227,7 +227,7 @@ function barChart(id, bars, referenceBars, ticks){
         plot.appendChild(container);
 
     const plotWidth = container.clientWidth-leftMargin-bars.length*barMargin;
-    const barWidth = Math.min(20, plotWidth/bars.length);
+    const barWidth = Math.max(1, Math.min(20, plotWidth/bars.length));
     const innerWidth = (barWidth+barMargin)*bars.length;
     let max = 0;
     for(let i=0;i<bars.length;i++){
@@ -239,13 +239,13 @@ function barChart(id, bars, referenceBars, ticks){
     let lastXTick;
     for(let i=0;i<bars.length;i++){
         let x = leftMargin+i*(barWidth+barMargin);
-        let width = barWidth+(x-Math.floor(x) > 0.5 ? 1 : 0)+"px";
+        let width = barWidth+(x-Math.floor(x) > 0.5 && barMargin == 0 ? 1 : 0)+"px";
         if (referenceBars !== undefined){
             const refElement = document.createElement("span");
             refElement.style.width = width;
             refElement.style.height = Math.floor(referenceBars[i]/max*plotHeight)+"px";
             refElement.style.position = "absolute";
-            refElement.style.left = Math.floor(x)+"px";
+            refElement.style.left = x+"px";
             refElement.style.bottom = bottomMargin+"px";
             refElement.style.display = "block";
             refElement.className = "refbar";
