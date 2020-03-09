@@ -263,7 +263,7 @@ function barChart(id, bars, referenceBars, ticks){
             legendElement.style.left = left+"px";
             legendElement.style.bottom = (bottomMargin-legendElement.clientHeight)+"px";
             // if there's not enough space for a tick we remove it again...
-            if (lastXTick !== undefined && left <= lastXTick)
+            if (lastXTick !== undefined && (left-20) <= lastXTick)
                 container.removeChild(legendElement);
             lastXTick = left+legendElement.clientWidth;
         }
