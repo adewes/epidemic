@@ -126,7 +126,7 @@ p.numbers span {
     background: #fff;
     padding: 20px;
     position: relative;
-    overflow-x: auto;
+    overflow-x: hidden;
     max-width: 100%;
 }
 
