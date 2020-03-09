@@ -238,8 +238,8 @@ function barChart(id, bars, referenceBars, ticks){
     }
     let lastXTick;
     for(let i=0;i<bars.length;i++){
-        let width = barWidth+(x-Math.floor(x) > 0.5 ? 1 : 0)+"px";
         let x = leftMargin+i*(barWidth+barMargin);
+        let width = barWidth+(x-Math.floor(x) > 0.5 ? 1 : 0)+"px";
         if (referenceBars !== undefined){
             const refElement = document.createElement("span");
             refElement.style.width = width;
