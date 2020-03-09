@@ -328,7 +328,7 @@ function updateNumbers(){
     totalDeceased.push(totalDeceasedT);
     const d = new Date()
     d.setDate(d.getDate()+t);
-    dates.push(d.toLocaleDate());
+    dates.push(d.toLocaleDateString());
 
     const totalSickElem = document.getElementById("totalSick");
     totalSickElem.innerText = formatNumber(totalSickT);
