@@ -130,6 +130,21 @@ p.numbers span {
     max-width: 100%;
 }
 
+.legend {
+    display: block;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 20px;
+    padding-left: 60px;
+}
+
+.legend span.bar {
+    padding: 4px 10px 4px 10px;
+    color: #444;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
 .chart span.bar {
     background: #f70;
 }
@@ -138,18 +153,19 @@ p.numbers span {
     background: #aaa;
 }
 
-.healthy span.bar {
+.healthy span.bar, span.bar.healthy {
     background: #5ea;
 }
 
-.sick span.bar {
+.sick span.bar, span.bar.sick {
     background: #fc0;
 }
 
-.deceased span.bar {
+.deceased span.bar, span.bar.deceased {
     background: #a00;
+    color: #fff;
 }
 
-.cured span.bar {
-    background: #5ea;
+.cured span.bar, span.bar.cured {
+    background: #7f5;
 }

@@ -119,23 +119,23 @@ function evolve(){
     let newDeceasedCohorts = [];
     let newCuredCohorts = [];
     let totalSick = 0;
-    // first we go through the sick cohorts. For each sick person, we 
+    // first we go through the sick cohorts. For each sick person...
     for(let i=0;i<sickCohorts.length;i++){
         let totalDeaths = 0;
         let newSickCohort = [0];
         for(let j=0;j<sickCohorts[i].length;j++){
-            const infected = sickCohorts[i][j];
-            totalSick += infected
-            // we calculate how many people from this cohort will die
-            let deaths = Math.round(dailyMortality[i]*infected);
-            // we add the deceased people to the cohorts
+            const sick = sickCohorts[i][j];
+            totalSick += sick
+            // ...we calculate how many people from this cohort will die
+            let deaths = Math.round(dailyMortality[i]*sick);
+            // ... and we add the deceased people to the cohorts.
             totalDeaths += deaths;
             if (j == sickCohorts[i].length-1){
                 // these people made it, they're cured!
-                newCuredCohorts.push(curedCohorts[i]+infected-deaths);
+                newCuredCohorts.push(curedCohorts[i]+sick-deaths);
             } else {
                 // we move all people that did not die one day further
-                newSickCohort.push(infected-deaths);
+                newSickCohort.push(sick-deaths);
             }
         }
         newSickCohorts.push(newSickCohort);
@@ -157,16 +157,16 @@ function evolve(){
         // people are present in a given cohort.
         // in the beginning, the immunity will be 0
         let immunity = 1.0-healthyPeople/allPeople;
-        // we pick one hundreth of new infections from this cohort
-        let newlyInfectedFromCohort = Math.min(Math.ceil(increase*(1.0-immunity)), healthyPeople);
+        let maximumIncrease = Math.min(increase, healthyPeople);
+        let newlyInfectedFromCohort = Math.ceil(maximumIncrease*(1.0-immunity));
         healthyCohorts[age]-=newlyInfectedFromCohort;
         newSickCohorts[age][0]+=newlyInfectedFromCohort;
-        newlyInfectedPeople += increase;
+        newlyInfectedPeople += maximumIncrease;
     }
-    for(let i=0;i<sickCohorts.length;i++){
+    for(let i=0;i<newSickCohorts.length;i++){
         let allSick = 0;
-        for(let j=0;j<sickCohorts[i].length;j++){
-            allSick +=sickCohorts[i][j];
+        for(let j=0;j<newSickCohorts[i].length;j++){
+            allSick +=newSickCohorts[i][j];
         }
         newAllSickCohorts.push(allSick);
     }
@@ -210,13 +210,18 @@ function getTotalHealthy(){
     return totalHealthy;
 }
 
-function barChart(id, bars, referenceBars, ticks){
+function barChart(id, allBars, opts){
+
+    if (opts === undefined)
+        opts = {}
+
     const plot = document.getElementById(id);
     const barMargin = plot.clientWidth > 600 ? 2: 0;
     const bottomMargin = 40;
     const leftMargin = 60;
     const plotHeight = 200;
-    const nHorizonalTicks = Math.min(plot.clientWidth/100, bars.length/10);
+    const n = allBars[0].length;
+    const nHorizonalTicks = Math.min(plot.clientWidth/100, n/10);
     const container = document.createElement("div");
     container.style.height = (plotHeight+bottomMargin)+"px";
     container.style.width = "100%";
@@ -226,24 +231,35 @@ function barChart(id, bars, referenceBars, ticks){
     else
         plot.appendChild(container);
 
-    const plotWidth = container.clientWidth-leftMargin-bars.length*barMargin;
-    const barWidth = Math.max(1, Math.min(20, plotWidth/bars.length));
-    const innerWidth = (barWidth+barMargin)*bars.length;
+    const plotWidth = container.clientWidth-leftMargin-n*barMargin;
+    const barWidth = Math.max(1, Math.min(20, plotWidth/n));
+    const innerWidth = (barWidth+barMargin)*n;
     let max = 0;
-    for(let i=0;i<bars.length;i++){
-        if (referenceBars !== undefined && referenceBars[i] > max)
-            max = referenceBars[i];
-        if (bars[i] > max)
-            max = bars[i];
-    }
+    if (opts.relative)
+        max = 100;
+    else
+        for(let j=0;j<allBars.length;j++){
+            let bars = allBars[j];
+            for(let i=0;i<n;i++){
+                if (opts.ref !== undefined && opts.ref[i] > max)
+                    max = opts.ref[i];
+                if (bars[i] > max)
+                    max = bars[i];
+            }
+        }
+
     let lastXTick;
-    for(let i=0;i<bars.length;i++){
+    for(let i=0;i<n;i++){
         let x = leftMargin+i*(barWidth+barMargin);
         let width = barWidth+(x-Math.floor(x) > 0.5 && barMargin == 0 ? 1 : 0)+"px";
-        if (referenceBars !== undefined){
+        if (opts.ref !== undefined){
             const refElement = document.createElement("span");
             refElement.style.width = width;
-            refElement.style.height = Math.floor(referenceBars[i]/max*plotHeight)+"px";
+            if (opts.relative)
+                refElement.style.height = plotHeight+"px";
+            else
+                refElement.style.height = Math.floor(opts.ref[i]/max*plotHeight)+"px";
+    
             refElement.style.position = "absolute";
             refElement.style.left = x+"px";
             refElement.style.bottom = bottomMargin+"px";
@@ -252,12 +268,12 @@ function barChart(id, bars, referenceBars, ticks){
             refElement.style.margin = barMargin+"px";
             container.appendChild(refElement);
         }
-        if (i % (Math.floor(bars.length/(nHorizonalTicks+1))) == 0){
+        if (i % (Math.floor(n/(nHorizonalTicks+1))) == 0){
             // we add a legend
             const legendElement = document.createElement("span");
             legendElement.style.position = "absolute";
             legendElement.style.display = "block";
-            legendElement.innerText = ticks !== undefined ? ticks[i] : i;
+            legendElement.innerText = opts.xTicks !== undefined ? opts.xTicks[i] : i;
             const left = Math.floor(-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin));
             container.appendChild(legendElement);
             legendElement.style.left = left+"px";
@@ -267,19 +283,34 @@ function barChart(id, bars, referenceBars, ticks){
                 container.removeChild(legendElement);
             lastXTick = left+legendElement.clientWidth;
         }
-
-        const element = document.createElement("span");
-        element.style.marginLeft = -(barWidth+barMargin)+"px";
-        element.style.width = width;
-        element.style.height = Math.floor(bars[i]/max*plotHeight)+"px";
-        element.style.position = "absolute";
-        element.style.left = x+"px";
-        element.style.bottom = bottomMargin+"px";
-        element.style.display = "block";
-        element.style.zIndex = 2;
-        element.className = "bar";
-        element.style.margin = barMargin+"px";
-        container.appendChild(element);
+        let y = 0;
+        for(let j=0;j<allBars.length;j++){
+            let bars = allBars[j];
+            let className;
+            if (opts.classNames !== undefined)
+                className = opts.classNames[j];
+            let h = bars[i];
+            let ref = (opts.relative ? opts.ref[i]: max);
+            let hh = Math.ceil(h/ref*plotHeight);
+            let yy = Math.floor(y/ref*plotHeight);
+            if (hh+yy > plotHeight)
+                hh -= hh+yy-plotHeight;
+            const element = document.createElement("span");
+            element.style.marginLeft = -(barWidth+barMargin)+"px";
+            element.style.width = width;
+            element.style.height = hh+"px";
+            element.style.position = "absolute";
+            element.style.left = x+"px";
+            element.style.bottom = (bottomMargin+yy)+"px";
+            element.style.display = "block";
+            element.style.zIndex = 2;
+            element.className = "bar";
+            if (className !== undefined)
+                element.className += " "+className;
+            element.style.margin = barMargin+"px";
+            container.appendChild(element);
+            y += h;
+        }
     }
     const nVerticalTicks = max > 0 ? 5 : 0;
     for(let i=1;i<nVerticalTicks+1;i++){
@@ -354,14 +385,15 @@ function updateNumbers(){
 
 function plot(){
     updateNumbers();
-    barChart("sick", totalSick, undefined, dates);
-    barChart("healthy", totalHealthy, undefined, dates);
-    barChart("cured", totalCured, undefined, dates);
-    barChart("deceased", totalDeceased, undefined, dates);
-    barChart("deceasedCohortsAbsolute", deceasedCohorts);
-    barChart("deceasedCohorts", deceasedCohorts, allCohorts);
-    barChart("sickCohorts", allSickCohorts, allCohorts);
-    barChart("sickCohortsAbsolute", allSickCohorts);
+    barChart("sick", [totalSick], {xTicks: dates});
+    barChart("healthy", [totalHealthy], {xTicks: dates});
+    barChart("cured", [totalCured], {xTicks: dates});
+    barChart("deceased", [totalDeceased], {xTicks: dates});
+    barChart("deceasedCohortsAbsolute", [deceasedCohorts]);
+    barChart("sickCohortsAbsolute", [allSickCohorts]);
+    barChart("mortality", [mortality], {});
+    barChart("ageCohorts", [allCohorts], {});
+    barChart("relativeCohorts", [healthyCohorts, curedCohorts, allSickCohorts, deceasedCohorts], {classNames: ["healthy", "cured", "sick", "deceased"], ref: allCohorts, relative: true});
 }
 
 function evolveAndPlot(){
