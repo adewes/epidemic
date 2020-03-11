@@ -7,8 +7,10 @@ let totalSick = [];
 let totalCured = [];
 let totalHealthy = [];
 let totalDeceased = [];
+let newInfections = [];
 let dates = [];
 
+let totalInfections = 0;
 let stopped = true;
 let t = 0;
 let initialSick = 200;
@@ -59,6 +61,7 @@ function updateInfectionRate(){
 
 function initialize(){
 
+    totalInfections = 0;
     t = 0;
 
     healthyCohorts = [783978, 796374, 802651, 776763, 766631, 739729, 736749, 720613, 738238, 726909, 746345, 741530, 726923, 735760, 751622, 752351, 766517, 787745, 835762, 861102, 891659, 934518, 929523, 916924, 934648, 967092, 985364, 1021919, 1116459, 1102501, 1127589, 1103635, 1083657, 1050793, 1043355, 1045184, 1065675, 1056516, 1060769, 1009272, 995070, 985641, 966513, 941433, 953081, 959668, 1038269, 1140019, 1180738, 1265825, 1323697, 1356220, 1389766, 1391794, 1414471, 1399366, 1351589, 1327937, 1279695, 1239631, 1166642, 1135091, 1098993, 1059645, 1033543, 994300, 986573, 960173, 953314, 914137, 827191, 770080, 662844, 575993, 760437, 761531, 726066, 865057, 887604, 849126, 761230, 679410, 622557, 563565, 484835, 357898, 323304, 295105, 275102, 231157, 194558, 152847, 123290, 96500, 69596, 51076, 37456, 27559, 18243, 9849, 5324];
@@ -143,10 +146,10 @@ function evolve(){
         newDeceasedCohorts.push(totalDeaths+deceasedCohorts[i]);
     }
     // now we calculate how many new infections we will have from this cohort
-    let newInfections = Math.ceil(dailyInfectionRate*totalSick);
+    let newCohortInfections = Math.ceil(dailyInfectionRate*totalSick);
     let newlyInfectedPeople = 0;
-    let increase = Math.ceil(newInfections/500);
-    while (newlyInfectedPeople < newInfections) {
+    let increase = Math.ceil(newCohortInfections/500);
+    while (newlyInfectedPeople < newCohortInfections) {
         // we randomly pick an age cohort
         let age = random(healthyCohorts.length);
         let healthyPeople = healthyCohorts[age];
@@ -161,6 +164,7 @@ function evolve(){
         let newlyInfectedFromCohort = Math.ceil(maximumIncrease*(1.0-immunity));
         healthyCohorts[age]-=newlyInfectedFromCohort;
         newSickCohorts[age][0]+=newlyInfectedFromCohort;
+        totalInfections += newlyInfectedFromCohort;
         newlyInfectedPeople += maximumIncrease;
     }
     for(let i=0;i<newSickCohorts.length;i++){
@@ -364,6 +368,12 @@ function updateNumbers(){
     totalHealthy.push(totalHealthyT);
     totalCured.push(totalCuredT);
     totalDeceased.push(totalDeceasedT);
+
+    if (newInfections.length == 0)
+        newInfections.push(totalInfections);
+    else
+        newInfections.push(totalInfections-newInfections[newInfections.length-1])
+
     const d = new Date()
     d.setDate(d.getDate()+t);
     dates.push(d.toLocaleDateString());
@@ -386,8 +396,9 @@ function updateNumbers(){
 
 function plot(){
     updateNumbers();
-    barChart("sick", [totalSick], {xTicks: dates});
     barChart("healthy", [totalHealthy], {xTicks: dates});
+    barChart("sick", [totalSick], {xTicks: dates});
+    barChart("newInfections", [newInfections], {xTicks: dates});
     barChart("cured", [totalCured], {xTicks: dates});
     barChart("deceased", [totalDeceased], {xTicks: dates});
     barChart("deceasedCohortsAbsolute", [deceasedCohorts]);
