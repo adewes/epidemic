@@ -371,8 +371,12 @@ function updateNumbers(){
 
     if (newInfections.length == 0)
         newInfections.push(totalInfections);
-    else
-        newInfections.push(totalInfections-newInfections[newInfections.length-1])
+    else{
+        let allInfections = 0;
+        for(let i=0;i<newInfections.length;i++)
+            allInfections += newInfections[i];
+        newInfections.push(totalInfections-allInfections);
+    }
 
     const d = new Date()
     d.setDate(d.getDate()+t);
