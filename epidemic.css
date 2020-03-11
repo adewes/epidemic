@@ -167,5 +167,6 @@ p.numbers span {
 }
 
 .cured span.bar, span.bar.cured {
-    background: #7f5;
+    background: #47f;
+    color: #fff;
 }
