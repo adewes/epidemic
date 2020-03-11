@@ -273,10 +273,11 @@ function barChart(id, allBars, opts){
             const legendElement = document.createElement("span");
             legendElement.style.position = "absolute";
             legendElement.style.display = "block";
+            legendElement.style.textAlign = "center";
             legendElement.innerText = opts.xTicks !== undefined ? opts.xTicks[i] : i;
             const left = Math.floor(-(legendElement.clientWidth-barWidth)/2+leftMargin+i*(barWidth+barMargin));
             container.appendChild(legendElement);
-            legendElement.style.left = left+"px";
+            legendElement.style.left = Math.floor(left-legendElement.clientWidth/2)+"px";
             legendElement.style.bottom = (bottomMargin-legendElement.clientHeight)+"px";
             // if there's not enough space for a tick we remove it again...
             if (lastXTick !== undefined && (left-20) <= lastXTick)
