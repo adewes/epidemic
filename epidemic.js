@@ -72,6 +72,7 @@ function initialize(){
     curedCohorts = [];
     deceasedCohorts = [];
     dailyMortality = [];
+    newInfections = [];
 
     totalSick = [];
     totalCured = [];
